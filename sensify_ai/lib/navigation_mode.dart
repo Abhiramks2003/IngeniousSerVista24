@@ -5,14 +5,14 @@ import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_tts/flutter_tts.dart';
 
-class NavigationMode extends StatefulWidget {
-  const NavigationMode({super.key});
+class MapMode extends StatefulWidget {
+  const MapMode({super.key});
 
   @override
-  State<NavigationMode> createState() => _NavigationModeState();
+  State<MapMode> createState() => _MapModeState();
 }
 
-class _NavigationModeState extends State<NavigationMode> {
+class _MapModeState extends State<MapMode> {
   late CameraController _cameraController;
   bool _isCameraStreaming = false;
   FlutterTts flutterTts = FlutterTts();
@@ -54,7 +54,7 @@ class _NavigationModeState extends State<NavigationMode> {
 
   Future<void> _sendImageToServer(String base64Image) async {
     // Replace the URL below with your server endpoint
-    String url = 'http://192.168.29.104:8000/objfind';
+    String url = 'http://192.168.29.37:8000/objfind';
     try {
       var response = await http.post(
         Uri.parse(url),

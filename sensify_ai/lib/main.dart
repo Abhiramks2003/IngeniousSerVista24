@@ -65,10 +65,8 @@ class _MicrophonePageState extends State<MicrophonePage> {
                 child: GestureDetector(
                   onTap: () {
                     Vibrate.feedback(FeedbackType.heavy);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NavigationMode()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MapMode()));
                   },
                   child: const CircleAvatar(
                     backgroundColor: Colors.green,

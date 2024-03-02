@@ -157,7 +157,7 @@ class _ObjectTrackingPageState extends State<ObjectTrackingPage> {
 
   Future<void> _sendImageToServer(String base64Image) async {
     const String apiUrl =
-        'http://192.168.85.214:8000/objfind'; // Replace with your API URL
+        'http://192.168.29.37:8000/objfind'; // Replace with your API URL
     try {
       final http.Response response = await http.post(
         Uri.parse(apiUrl),
