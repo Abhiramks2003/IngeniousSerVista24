@@ -55,7 +55,58 @@ class _InteractionModeState extends State<InteractionMode> {
   @override
   void dispose() {
     _controller.dispose();
+    _speech.stop();
     super.dispose();
+  }
+
+  Future<void> _takePictureAndSend() async {
+    if (!_controller.value.isInitialized) {
+      return;
+    }
+
+    try {
+      // Reset the text before starting a new listening session
+      setState(() {
+        _text = '';
+      });
+
+      // Ensure speech is stopped before starting a new session
+      await _speech.stop();
+
+      bool isListening = await _speech.initialize();
+      if (!isListening) {
+        print('Failed to start listening for speech.');
+        return;
+      }
+
+      // Listen for speech input
+      await _speech.listen(
+        onResult: (result) {
+          setState(() {
+            _text = result.recognizedWords;
+          });
+        },
+      );
+
+      // Wait for speech to text process to complete
+      while (_text == '') {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+      print(_text);
+
+      // Take picture after speech to text process is complete
+      final image = await _controller.takePicture();
+      final bytes = await image.readAsBytes();
+      final base64String = base64Encode(bytes);
+      VisionHelpers.sendImageToServer(
+          base64String, _text); // You can use this base64String as needed
+
+      setState(() {
+        imageFile = image;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -75,45 +126,7 @@ class _InteractionModeState extends State<InteractionMode> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Vibrate.feedback(FeedbackType.heavy);
-          if (!_controller.value.isInitialized) {
-            return;
-          }
-
-          try {
-            bool isListening = await _speech.initialize();
-            if (!isListening) {
-              print('Failed to start listening for speech.');
-              return;
-            }
-
-            // Listen for speech input
-            await _speech.listen(
-              onResult: (result) {
-                setState(() {
-                  _text = result.recognizedWords;
-                });
-              },
-            );
-            // Wait for speech to text process to complete
-            while (_text == null) {
-              await Future.delayed(const Duration(milliseconds: 100));
-            }
-            print(_text);
-
-            // Take picture after speech to text process is complete
-            final image = await _controller.takePicture();
-            final bytes = await image.readAsBytes();
-            final base64String = base64Encode(bytes);
-            print(base64String);
-            VisionHelpers.sendImageToServer(
-                base64String, _text); // You can use this base64String as needed
-
-            setState(() {
-              imageFile = image;
-            });
-          } catch (e) {
-            print(e);
-          }
+          await _takePictureAndSend();
         },
         child: const Icon(Icons.camera),
       ),

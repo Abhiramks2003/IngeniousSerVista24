@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sensify AI',
+      title: 'VisionX',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -47,39 +47,95 @@ class _MicrophonePageState extends State<MicrophonePage> {
   Future<void> _speakWelcome() async {
     await flutterTts.setLanguage('en-US');
     await flutterTts.setPitch(1.0);
-    await flutterTts.speak("Welcome to Sensify A I. What can I do for you?");
+    await flutterTts.speak("Welcome to VisionX. What can I do for you?");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sensify.AI'),
+        title: const Text(
+          'VisionX',
+          style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+        ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Vibrate.feedback(FeedbackType.heavy);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MapMode()));
-                  },
-                  child: const CircleAvatar(
-                    backgroundColor: Colors.green,
-                    radius: 55,
-                    child: Icon(
-                      Icons.navigation,
-                      color: Colors.white,
-                      size: 50,
+      body: Center(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GestureDetector(
+                      onTap: () {
+                        Vibrate.feedback(FeedbackType.heavy);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MapMode()));
+                      },
+                      child: Semantics(
+                        label: 'Navigation mode',
+                        child: const CircleAvatar(
+                          backgroundColor: Colors.green,
+                          radius: 40,
+                          child: Icon(
+                            Icons.navigation,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                      ))),
+            ),
+            Center(
+              child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GestureDetector(
+                      onTap: () {
+                        Vibrate.feedback(FeedbackType.heavy);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ObjectTrackingPage()));
+                      },
+                      child: Semantics(
+                        label: 'Object Tracking',
+                        child: const CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          radius: 40,
+                          child: Icon(
+                            Icons.lens,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                      ))),
+            ),
+            Center(
+              child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Vibrate.feedback(FeedbackType.heavy);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InteractionMode()));
+                    },
+                    child: Semantics(
+                      label: 'Interaction Mode',
+                      child: const CircleAvatar(
+                        backgroundColor: Colors.red,
+                        radius: 40,
+                        child: Icon(
+                          Icons.square,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
                     ),
-                  ),
-                )),
-          )
-        ],
+                  )),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -98,8 +154,8 @@ class _MicrophonePageState extends State<MicrophonePage> {
               });
             },
             child: CircleAvatar(
-              backgroundColor: Colors.blue,
-              radius: 55,
+              backgroundColor: Colors.black,
+              radius: 50,
               child: Icon(
                 _isListening ? Icons.mic : Icons.mic_none,
                 color: Colors.white,
@@ -127,6 +183,9 @@ class _MicrophonePageState extends State<MicrophonePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ObjectTrackingPage()));
+            } else if (_text.toLowerCase().contains('navigation')) {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MapMode()));
             }
             _text = 'Press the button and start speaking';
           }),

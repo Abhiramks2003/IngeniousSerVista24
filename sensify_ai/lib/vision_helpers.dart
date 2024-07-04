@@ -5,7 +5,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 class VisionHelpers {
   static Future<void> sendImageToServer(
       String base64String, String prompt) async {
-    const String apiUrl = 'http://192.168.29.37:5000/process_image_and_text';
+    const String apiUrl = 'http://192.168.29.79:5000/process_image_and_text';
     // print(base64String);
     FlutterTts flutterTts = FlutterTts();
     try {
